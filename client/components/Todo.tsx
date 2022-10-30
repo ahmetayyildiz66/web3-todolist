@@ -19,7 +19,7 @@ interface TodoProps {
   text: string
 }
 
-const Card = () => {
+const Todo = () => {
   const [searchText, setSearchText] = useState("")
   const [account, setAccount] = useState("")
   const [list, setList] = useState<TodoProps[]>([])
@@ -38,6 +38,8 @@ const Card = () => {
         const addTodoItemTx = await todoListContract.addTodoItem(searchText);
 
         await addTodoItemTx.wait()
+        await getAllTodos()
+        setSearchText("")
       }
     } catch (error) {
       console.error(error)
@@ -135,11 +137,11 @@ const Card = () => {
         <span className="text-1xl font-bold">Account: </span>
         <span className="ml-2">{account}</span>
       </p>
-      <h1 className="text-4xl pt-12">Todo List {searchText}</h1>
+      <h1 className="text-4xl pt-12">Todo List</h1>
       <SearchInput searchText={searchText} setSearchText={setSearchText} addItem={addItem} />
       <TodoList toggleTask={toggleTask} deleteTask={deleteTask} list={list} />
     </div>
   )
 }
 
-export default Card
+export default Todo
