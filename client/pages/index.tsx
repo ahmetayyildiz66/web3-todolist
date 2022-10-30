@@ -3,9 +3,6 @@ import Card from '../components/card'
 
 const Home: NextPage = () => {
   return (
-    // <div className="min-h-screen py-2">
-    //   Hey Home page
-    // </div>
     <main className="min-h-screen py-2 flex justify-center bg-orange-300 flex-col items-center">
       <Card />
     </main>

@@ -14,7 +14,7 @@ const SearchInput = ({ searchText, setSearchText, addItem }: SearchInputProps) =
 
   return (
     <input
-      className="border-pink-500"
+      className="mt-3 p-1 rounded-md px-4"
       value={searchText}
       placeholder="Add something..."
       onChange={(e) => setSearchText(e.target.value)}
