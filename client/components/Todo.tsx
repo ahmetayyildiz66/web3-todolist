@@ -87,6 +87,7 @@ const Todo = () => {
     if (checkIfMetamaskExist()) {
       try {
         const accounts = await ethereum()?.request({ method: "eth_accounts" })
+        console.log('accounts: ', accounts)
 
         if (accounts && Array.isArray(accounts)) {
           setAccount(accounts[0].slice(0, 5) + '...' + accounts[0].slice(-5))
