@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
 import { MetaMaskInpageProvider } from "@metamask/providers"
-import Checkmark from '../assets/checkmark.svg'
 import SearchInput from "./SearchInput"
 import TodoListABI from '../utils/TodoList.json'
 import { ethereum } from '../utils/ethereumObject'
@@ -23,7 +22,7 @@ interface TodoProps {
 const Card = () => {
   const [searchText, setSearchText] = useState("")
   const [account, setAccount] = useState("")
-  const [list, setList] = useState<string[]>([])
+  const [list, setList] = useState<TodoProps[]>([])
 
   const contractAddress = "0xc45B9E1edfc84d9335CC52B30e2008a409498B68"
   const contractABI = TodoListABI.abi
@@ -45,6 +44,36 @@ const Card = () => {
     }
   }
 
+  const toggleTask = async (id: number) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(ethereum() as any)
+      const signer = provider.getSigner()
+
+      const todoListContract = new ethers.Contract(contractAddress, contractABI, signer);
+      const toggleTodoItemTx = await todoListContract.toggleTask(id)
+
+      await toggleTodoItemTx.wait()
+      await getAllTodos()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const deleteTask = async (id: number) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(ethereum() as any)
+      const signer = provider.getSigner()
+
+      const todoListContract = new ethers.Contract(contractAddress, contractABI, signer)
+      const todoListContractDeleteTx = await todoListContract.deleteTodo(id)
+
+      await todoListContractDeleteTx.wait()
+      await getAllTodos()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   const checkIfMetamaskExist = () => {
     if (!ethereum()) {
       console.log("You don't have metamask")
@@ -58,7 +87,7 @@ const Card = () => {
         const accounts = await ethereum()?.request({ method: "eth_accounts" })
 
         if (accounts && Array.isArray(accounts)) {
-          setAccount(accounts[0])
+          setAccount(accounts[0].slice(0, 5) + '...' + accounts[0].slice(-5))
         } else {
           return null
         }
@@ -79,14 +108,13 @@ const Card = () => {
 
         const getAllTodosTx = await todoListContract.getAllTodos()
 
-        console.log("todotx: ", getAllTodosTx)
-
-        const tempAllTodos: string[] = []
+        const tempAllTodos: TodoProps[] = []
         getAllTodosTx.map((todo: TodoProps) => {
-          tempAllTodos.push(todo.text)
+          if (todo.text) {
+            tempAllTodos.push(todo)
+          }
         })
 
-        console.log("tempAllTodos: ", tempAllTodos)
         setList(tempAllTodos)
 
 
@@ -109,8 +137,7 @@ const Card = () => {
       </p>
       <h1 className="text-4xl pt-12">Todo List {searchText}</h1>
       <SearchInput searchText={searchText} setSearchText={setSearchText} addItem={addItem} />
-      <TodoList list={list} />
-      <Checkmark className="w-5" />
+      <TodoList toggleTask={toggleTask} deleteTask={deleteTask} list={list} />
     </div>
   )
 }
