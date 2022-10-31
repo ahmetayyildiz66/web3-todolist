@@ -14,7 +14,7 @@ contract TodoList {
 
   function addTodoItem(string memory text_) external{
     _todos.push(TodoItem({
-      id: _todos.length + 1,
+      id: _todos.length,
       text: text_,
       creator: msg.sender,
       isCompleted: false

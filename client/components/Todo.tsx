@@ -24,7 +24,7 @@ const Todo = () => {
   const [account, setAccount] = useState("")
   const [list, setList] = useState<TodoProps[]>([])
 
-  const contractAddress = "0xc45B9E1edfc84d9335CC52B30e2008a409498B68"
+  const contractAddress = "0x9AB1EC1E356dc409B150706169DCd671526DA664"
   const contractABI = TodoListABI.abi
 
   const addItem = async () => {
