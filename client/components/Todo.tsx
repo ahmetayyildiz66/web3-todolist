@@ -64,7 +64,7 @@ const Todo = () => {
   const deleteTask = async (id: number) => {
     try {
       const provider = new ethers.providers.Web3Provider(ethereum() as any)
-      const signer = provider.getSigner("0xfA697D0D2D40713fA5E6A9086da646B6207B00C5")
+      const signer = provider.getSigner()
 
       const todoListContract = new ethers.Contract(contractAddress, contractABI, signer)
       const todoListContractDeleteTx = await todoListContract.deleteTodo(id)
@@ -86,10 +86,10 @@ const Todo = () => {
   const connectToMetaMask = async () => {
     if (checkIfMetamaskExist()) {
       try {
-        const accounts = await ethereum()?.request({ method: "eth_accounts" })
+        const accounts = await ethereum()?.request({ method: "eth_requestAccounts" })
         console.log('accounts: ', accounts)
 
-        if (accounts && Array.isArray(accounts)) {
+        if (Array.isArray(accounts) && accounts.length > 0) {
           setAccount(accounts[0].slice(0, 5) + '...' + accounts[0].slice(-5))
         } else {
           return null
