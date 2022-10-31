@@ -64,7 +64,7 @@ const Todo = () => {
   const deleteTask = async (id: number) => {
     try {
       const provider = new ethers.providers.Web3Provider(ethereum() as any)
-      const signer = provider.getSigner()
+      const signer = provider.getSigner("0xfA697D0D2D40713fA5E6A9086da646B6207B00C5")
 
       const todoListContract = new ethers.Contract(contractAddress, contractABI, signer)
       const todoListContractDeleteTx = await todoListContract.deleteTodo(id)
